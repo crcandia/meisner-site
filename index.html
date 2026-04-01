@@ -698,6 +698,19 @@ body.modal-open{overflow:hidden;}
 
 
 
+.gf-author-link,
+.gf-author-link:visited {
+  color: inherit;
+  text-decoration: none;
+}
+
+.gf-author-link:hover,
+.gf-author-link:focus {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+
 
 
 /* responsive */
@@ -1294,10 +1307,20 @@ body.modal-open{overflow:hidden;}
 
   </div><!-- /main -->
 </div><!-- /app -->
-
 <!-- ═══ GLOBAL FOOTER ═══ -->
 <footer id="gfooter">
-  <span class="gf-author">by <strong>Cristian Candia, Ph.D.</strong> — Técnica Meisner para principiantes</span>
+  <span class="gf-author">
+    by 
+    <a
+      class="gf-author-link"
+      href="https://criss-lab.com/author/cristian-candia/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <strong>Cristian Candia, Ph.D.</strong>
+    </a>
+    — Técnica Meisner para principiantes
+  </span>
 
   <a
     class="gf-lab-link"
