@@ -47,8 +47,40 @@
   "description": "Guía para entender la técnica Meisner: principios, repetición, escucha, preparación emocional, trabajo de escena y materiales de apoyo.",
   "inLanguage": "es"
 }
-
 </script>
+
+<script>
+function showWelcome(){
+  var dismissed = localStorage.getItem('meisnerWelcomeDismissed');
+  if(dismissed === 'true') return;
+
+  var overlay = document.getElementById('welcome-overlay');
+  if(!overlay) return;
+
+  overlay.classList.add('show');
+  overlay.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
+}
+
+function closeWelcome(save){
+  var overlay = document.getElementById('welcome-overlay');
+  if(!overlay) return;
+
+  overlay.classList.remove('show');
+  overlay.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('modal-open');
+
+  if(save){
+    localStorage.setItem('meisnerWelcomeDismissed', 'true');
+  }
+}
+
+function dismissWelcomeForever(){
+  localStorage.setItem('meisnerWelcomeDismissed', 'true');
+  closeWelcome(false);
+}
+</script>
+
 <style>
 :root{
   --a50:#FAEEDA;--a100:#FAC775;--a400:#EF9F27;--a600:#BA7517;--a800:#633806;
@@ -521,6 +553,150 @@ hr.div{border:none;border-top:0.5px solid var(--bdr);margin:1.75rem 0;}
     padding-bottom:52px;
   }
 }
+
+
+
+
+.welcome-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.52);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:1200;
+  padding:1rem;
+}
+
+.welcome-overlay.show{display:flex;}
+
+.welcome-modal{
+  position:relative;
+  width:min(620px, 100%);
+  background:var(--bg);
+  color:var(--txt);
+  border:0.5px solid var(--bdr2);
+  border-radius:18px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.22);
+  padding:1.3rem 1.3rem 1.05rem;
+}
+
+.welcome-kicker{
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  color:var(--a600);
+  font-weight:500;
+  margin-bottom:0.45rem;
+}
+
+.welcome-modal h2{
+  font-family:var(--serif);
+  font-size:28px;
+  font-weight:400;
+  line-height:1.15;
+  margin:0 0 0.85rem 0;
+  color:var(--txt);
+}
+
+.welcome-modal p{
+  font-size:14.5px;
+  line-height:1.72;
+  color:var(--txt2);
+  margin:0 0 0.9rem 0;
+}
+
+.welcome-modal p strong{color:var(--txt);}
+
+.welcome-actions{
+  display:flex;
+  gap:0.7rem;
+  margin-top:0.25rem;
+}
+
+.welcome-btn{
+  padding:8px 16px;
+  border-radius:var(--r);
+  border:0.5px solid var(--bdr2);
+  background:transparent;
+  color:var(--txt);
+  font-family:var(--sans);
+  font-size:13px;
+  cursor:pointer;
+}
+
+.welcome-btn:hover{background:var(--bg3);}
+
+.welcome-btn.primary{
+  background:var(--a50);
+  border-color:var(--a100);
+  color:var(--a600);
+  font-weight:500;
+}
+
+.welcome-never{
+  margin-top:0.8rem;
+  border:none;
+  background:none;
+  padding:0;
+  color:var(--txt3);
+  font-size:12px;
+  cursor:pointer;
+  font-family:var(--sans);
+}
+
+.welcome-never:hover{
+  color:var(--txt2);
+  text-decoration:underline;
+}
+
+.welcome-close{
+  position:absolute;
+  top:0.8rem;
+  right:0.8rem;
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  border:0.5px solid var(--bdr2);
+  background:transparent;
+  color:var(--txt2);
+  cursor:pointer;
+  font-size:14px;
+}
+
+.welcome-close:hover{
+  background:var(--bg3);
+  color:var(--txt);
+}
+
+body.modal-open{overflow:hidden;}
+
+@media (max-width:700px){
+  .welcome-overlay{
+    align-items:flex-end;
+    padding:0.75rem;
+  }
+
+  .welcome-modal{
+    width:100%;
+    max-height:88vh;
+    overflow:auto;
+    border-radius:18px 18px 0 0;
+    padding:1.1rem 1rem 1rem;
+  }
+
+  .welcome-modal h2{font-size:24px;}
+  .welcome-modal p{font-size:14px;line-height:1.68;}
+
+  .welcome-actions{
+    display:grid;
+    grid-template-columns:1fr;
+  }
+
+  .welcome-btn{width:100%;}
+}
+
+
 
 
 
@@ -1296,13 +1472,48 @@ document.addEventListener('keydown',function(e){
 document.getElementById('main').addEventListener('click',closeSidebar);
 
 
-  document.addEventListener("DOMContentLoaded", renderInstagramEmbeds);
-  window.addEventListener("load", renderInstagramEmbeds);
+document.addEventListener("DOMContentLoaded", function(){
+  renderInstagramEmbeds();
+  setTimeout(showWelcome, 250);
+});
+
+window.addEventListener("load", renderInstagramEmbeds);
 </script>
 
 </script>
 
 <script async src="https://www.instagram.com/embed.js" onload="renderInstagramEmbeds()"></script>
+
+
+<div id="welcome-overlay" class="welcome-overlay" aria-hidden="true">
+  <div class="welcome-modal" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+    <button class="welcome-close" onclick="closeWelcome(true)" aria-label="Cerrar">✕</button>
+
+    <div class="welcome-kicker">Sobre esta guía</div>
+    <h2 id="welcome-title">Antes de entrar</h2>
+
+    <p>
+      Este sitio nace desde la curiosidad rigurosa de un <strong>outsider</strong> del mundo de la actuación:
+      alguien que no habla desde la formación actoral profesional, sino desde el deseo de estudiar, ordenar
+      y comprender seriamente la técnica Meisner.
+    </p>
+
+    <p>
+      No pretende sustituir la formación formal, el trabajo en estudio ni la guía de profesores especializados.
+      Aspira, más modestamente, a ser una síntesis honesta (todavía incompleta) que pueda servir como punto
+      de entrada para quienes quieran explorar y seguir aprendiendo.
+    </p>
+
+    <div class="welcome-actions">
+      <button class="welcome-btn primary" onclick="closeWelcome(true)">Entrar</button>
+    </div>
+
+    <button class="welcome-never" onclick="dismissWelcomeForever()">
+      No mostrar de nuevo
+    </button>
+  </div>
+</div>
+
 
 </body>
 </html>
