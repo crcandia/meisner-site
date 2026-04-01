@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Técnica Meisner — Cristian Candia, Ph.D.</title>
+<style>
+:root{
+  --a50:#FAEEDA;--a100:#FAC775;--a400:#EF9F27;--a600:#BA7517;--a800:#633806;
+  --t50:#E1F5EE;--t100:#9FE1CB;--t600:#0F6E56;--t800:#085041;
+  --c50:#FAECE7;--c600:#993C1D;
+  --p50:#EEEDFE;--p600:#534AB7;
+  --g50:#F1EFE8;--g100:#D3D1C7;--g600:#5F5E5A;
+  --b50:#E6F1FB;--b600:#185FA5;
+  --txt:#1a1a18;--txt2:#5F5E5A;--txt3:#888780;
+  --bg:#fff;--bg2:#F7F5F0;--bg3:#F1EFE8;
+  --bdr:rgba(0,0,0,0.09);--bdr2:rgba(0,0,0,0.18);
+  --r:8px;--rl:12px;
+  --serif:Georgia,'Times New Roman',serif;
+  --sans:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --nav:220px;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --txt:#f0ede6;--txt2:#B4B2A9;--txt3:#888780;
+    --bg:#1a1918;--bg2:#232120;--bg3:#2c2a27;
+    --bdr:rgba(255,255,255,0.08);--bdr2:rgba(255,255,255,0.16);
+    --a50:#3a2804;--a100:#5a3c08;--a600:#FAC775;--a800:#FAEEDA;
+    --t50:#04201a;--t600:#5DCAA5;
+    --c50:#2d0d04;--c600:#F0997B;
+    --p50:#140e30;--p600:#AFA9EC;
+    --g50:#242220;--g100:#302e2c;--g600:#B4B2A9;
+    --b50:#042c53;--b600:#85B7EB;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{font-family:var(--sans);color:var(--txt);background:var(--bg);font-size:16px;line-height:1.7;display:flex;flex-direction:column;min-height:100vh;}
+
+/* ── LAYOUT ── */
+#app{display:flex;flex:1;overflow:hidden;height:calc(100vh - 48px);}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  width:var(--nav);flex-shrink:0;
+  border-right:0.5px solid var(--bdr2);background:var(--bg2);
+  display:flex;flex-direction:column;overflow-y:auto;scrollbar-width:thin;
+  transition:transform 0.25s;
+}
+.sb-logo{padding:1.2rem 1rem 0.75rem;border-bottom:0.5px solid var(--bdr);}
+.sb-logo-title{font-family:var(--serif);font-size:13.5px;color:var(--txt);line-height:1.3;}
+.sb-logo-sub{font-size:10.5px;color:var(--txt3);margin-top:2px;}
+.sb-section-label{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--txt3);font-weight:500;padding:0.75rem 1rem 0.25rem;}
+.sb-btn{
+  display:flex;align-items:center;gap:8px;width:100%;text-align:left;
+  padding:0.42rem 1rem;border:none;background:transparent;
+  color:var(--txt2);font-size:12.5px;font-family:var(--sans);cursor:pointer;
+  border-left:2px solid transparent;transition:all 0.12s;line-height:1.35;
+}
+.sb-btn:hover{background:var(--bg3);color:var(--txt);}
+.sb-btn.active{background:var(--a50);color:var(--a600);border-left-color:var(--a400);font-weight:500;}
+.sb-num{width:17px;height:17px;border-radius:50%;background:var(--bg3);color:var(--txt3);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;flex-shrink:0;}
+.sb-btn.active .sb-num{background:var(--a100);color:var(--a600);}
+.sb-div{height:0.5px;background:var(--bdr);margin:0.3rem 0;}
+.sb-action{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:0.5rem 1rem;border:none;background:transparent;color:var(--txt2);font-size:12px;font-family:var(--sans);cursor:pointer;transition:all 0.12s;}
+.sb-action:hover{background:var(--bg3);color:var(--txt);}
+
+/* ── MAIN ── */
+#main{flex:1;overflow-y:auto;scrollbar-width:thin;scroll-behavior:smooth;}
+
+/* ── TOPBAR (mobile) ── */
+#topbar{display:none;position:sticky;top:0;z-index:200;background:var(--bg2);border-bottom:0.5px solid var(--bdr2);padding:0.55rem 1rem;align-items:center;gap:10px;}
+#menu-btn{background:none;border:0.5px solid var(--bdr2);border-radius:var(--r);padding:4px 8px;cursor:pointer;color:var(--txt);font-size:13px;}
+#topbar-title{font-size:13px;font-weight:500;color:var(--txt);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+@media(max-width:700px){
+  #topbar{display:flex;}
+  #sidebar{position:fixed;top:0;left:0;height:100%;z-index:300;width:260px;transform:translateX(-100%);}
+  #sidebar.open{transform:translateX(0);}
+  #app{height:calc(100vh - 44px);}
+  .page{padding:1.25rem 1rem 4rem;}
+  .two-col{grid-template-columns:1fr!important;}
+  .actors-grid{grid-template-columns:1fr 1fr!important;}
+}
+
+/* ── BREADCRUMB ── */
+#breadcrumb{display:flex;align-items:center;gap:6px;padding:0.65rem 1.5rem;border-bottom:0.5px solid var(--bdr);background:var(--bg);font-size:11.5px;color:var(--txt3);position:sticky;top:0;z-index:100;}
+#breadcrumb .bc-cur{color:var(--txt2);font-weight:500;}
+.bc-sep{color:var(--bdr2);}
+.bc-actions{margin-left:auto;display:flex;gap:6px;}
+#progress-bar{height:2px;background:var(--a400);position:fixed;top:0;left:0;z-index:999;transition:width 0.3s;}
+
+/* ── PAGE ── */
+.page{max-width:740px;margin:0 auto;padding:1.75rem 2rem 4rem;display:none;}
+.page.active{display:block;}
+
+/* ── TYPOGRAPHY ── */
+.prose{font-size:15.5px;color:var(--txt);line-height:1.75;margin-bottom:1rem;}
+h3{font-size:16.5px;font-weight:500;color:var(--txt);margin:1.5rem 0 0.6rem;}
+strong{font-weight:500;}
+
+/* ── HERO ── */
+.hero{padding:1.75rem 0 1.5rem;border-bottom:0.5px solid var(--bdr);margin-bottom:1.75rem;}
+.kicker{font-size:10.5px;text-transform:uppercase;letter-spacing:0.12em;color:var(--a600);font-weight:500;margin-bottom:0.6rem;}
+.hero h1{font-family:var(--serif);font-size:34px;font-weight:400;line-height:1.15;color:var(--txt);margin-bottom:0.75rem;}
+.hero-desc{font-size:15px;color:var(--txt2);max-width:580px;line-height:1.6;}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:1rem;}
+.pill{font-size:10.5px;font-weight:500;padding:3px 11px;border-radius:var(--r);background:var(--a50);color:var(--a600);}
+
+/* ── SEC HEADER ── */
+.sec-hd{margin-bottom:1.5rem;}
+.sec-kicker{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--a600);font-weight:500;margin-bottom:0.4rem;}
+.sec-hd h2{font-family:var(--serif);font-size:28px;font-weight:400;color:var(--txt);line-height:1.2;margin-bottom:0.3rem;}
+.sec-hd .tagline{font-size:14.5px;color:var(--txt2);}
+
+/* ── QUOTE ── */
+.quote{border-left:3px solid var(--a400);padding:0.7rem 1.2rem;margin:1.4rem 0;background:var(--a50);border-radius:0 var(--r) var(--r) 0;}
+.quote p{font-family:var(--serif);font-size:16.5px;font-style:italic;color:var(--txt);line-height:1.55;}
+.quote .attr{font-size:10.5px;color:var(--a600);font-weight:500;margin-top:0.4rem;font-style:normal;font-family:var(--sans);text-transform:uppercase;letter-spacing:0.05em;}
+
+/* ── CONCEPT CARD ── */
+.ccard{background:var(--bg3);border-radius:var(--rl);border:0.5px solid var(--bdr);padding:1.1rem 1.4rem;margin:1.4rem 0;}
+.clabel{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--txt3);font-weight:500;margin-bottom:0.4rem;}
+.ctitle{font-size:15.5px;font-weight:500;color:var(--txt);margin-bottom:0.35rem;}
+.cbody{font-size:13.5px;color:var(--txt2);line-height:1.65;}
+
+/* ── STEP LIST ── */
+.steps{list-style:none;margin:1.2rem 0;}
+.steps li{display:flex;gap:0.85rem;align-items:flex-start;padding:0.65rem 0;border-bottom:0.5px solid var(--bdr);}
+.steps li:last-child{border-bottom:none;}
+.sn{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:var(--a50);color:var(--a600);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;margin-top:5px;border:0.5px solid var(--a100);}
+.sc strong{font-weight:500;display:block;color:var(--txt);font-size:14.5px;}
+.sc span{font-size:13.5px;color:var(--txt2);line-height:1.55;}
+
+/* ── DIALOGUE ── */
+.dialogue{background:var(--bg);border:0.5px solid var(--bdr2);border-radius:var(--rl);padding:1.1rem;margin:1.4rem 0;}
+.d-label{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--txt3);font-weight:500;margin-bottom:0.85rem;display:flex;align-items:center;gap:8px;}
+.d-label::after{content:'';flex:1;height:0.5px;background:var(--bdr);}
+.d-line{display:flex;gap:0.7rem;margin-bottom:0.5rem;align-items:flex-start;}
+.d-who{font-size:9.5px;font-weight:500;color:var(--a600);min-width:26px;padding-top:4px;text-transform:uppercase;letter-spacing:0.05em;}
+.d-txt{font-size:14.5px;color:var(--txt);font-family:var(--serif);font-style:italic;line-height:1.5;}
+.d-note{font-size:11px;color:var(--txt3);margin-top:1px;font-style:normal;font-family:var(--sans);}
+
+/* ── ALERTS ── */
+.alert{border-radius:var(--r);padding:0.8rem 1.1rem;margin:1.1rem 0;border:0.5px solid var(--bdr);border-left:3px solid;}
+.alert-warn{background:var(--c50);border-left-color:var(--c600);}
+.alert-tip{background:var(--t50);border-left-color:var(--t600);}
+.alert-info{background:var(--b50);border-left-color:var(--b600);}
+.alabel{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;margin-bottom:0.3rem;}
+.alert-warn .alabel{color:var(--c600);}
+.alert-tip .alabel{color:var(--t600);}
+.alert-info .alabel{color:var(--b600);}
+.alert p{font-size:13.5px;color:var(--txt);line-height:1.6;}
+
+/* ── GRID ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:0.85rem;margin:1.1rem 0;}
+.ccomp{background:var(--bg3);border-radius:var(--rl);border:0.5px solid var(--bdr);padding:0.9rem 1rem;}
+.ccomp h4{font-size:12.5px;font-weight:500;color:var(--txt);margin-bottom:0.55rem;padding-bottom:0.35rem;border-bottom:0.5px solid var(--bdr);}
+.ccomp ul{list-style:none;}
+.ccomp ul li{font-size:12.5px;color:var(--txt2);padding:2px 0;line-height:1.5;}
+.ccomp ul li::before{content:'— ';color:var(--a600);}
+
+/* ── PRINCIPLE ── */
+.principle{border:0.5px solid var(--bdr2);border-radius:var(--rl);padding:1.4rem;margin:1.4rem 0;text-align:center;}
+.principle p{font-family:var(--serif);font-size:18.5px;font-weight:400;color:var(--txt);line-height:1.4;}
+.principle .psrc{font-size:10.5px;color:var(--txt3);margin-top:0.6rem;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;}
+
+/* ── EXERCISE BOX ── */
+.exbox{border:0.5px solid var(--a100);border-radius:var(--rl);overflow:hidden;margin:1.6rem 0;}
+.ex-hd{background:var(--a50);padding:0.6rem 1.1rem;border-bottom:0.5px solid var(--a100);}
+.ex-hd p{font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:var(--a600);}
+.ex-body{padding:1.1rem;}
+
+/* ── VIDEO CARD (thumbnail → opens YouTube) ── */
+.vid-card{margin:1.6rem 0;border-radius:var(--rl);overflow:hidden;border:0.5px solid var(--bdr2);}
+.vid-card-hd{background:var(--bg3);padding:0.55rem 1rem;border-bottom:0.5px solid var(--bdr);display:flex;align-items:center;gap:8px;}
+.vid-card-hd strong{font-size:13px;font-weight:500;color:var(--txt);flex:1;}
+.vid-type{font-size:9.5px;text-transform:uppercase;letter-spacing:0.08em;color:var(--a600);font-weight:500;flex-shrink:0;}
+.vid-thumb-wrap{position:relative;padding-bottom:56.25%;background:#111;cursor:pointer;}
+.vid-thumb-wrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.85;transition:opacity 0.2s;}
+.vid-thumb-wrap:hover img{opacity:1;}
+.vid-play-btn{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  pointer-events:none;
+}
+.vid-play-circle{
+  width:56px;height:56px;border-radius:50%;background:rgba(0,0,0,0.72);
+  display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,0.5);
+  transition:transform 0.2s;
+}
+.vid-thumb-wrap:hover .vid-play-circle{transform:scale(1.08);}
+.vid-play-triangle{
+  width:0;height:0;border-top:11px solid transparent;border-bottom:11px solid transparent;
+  border-left:20px solid rgba(255,255,255,0.92);margin-left:4px;
+}
+.vid-caption{font-size:11.5px;color:rgba(255,255,255,0.75);text-shadow:0 1px 3px rgba(0,0,0,0.7);font-weight:500;}
+.vid-card-footer{padding:0.6rem 1rem;font-size:12px;color:var(--txt3);display:flex;align-items:center;justify-content:space-between;}
+.vid-link{font-size:12px;font-weight:500;color:var(--a600);text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
+.vid-link:hover{text-decoration:underline;}
+
+/* ── VIDEO NOTE ── */
+.vid-note{
+  background:var(--b50);border:0.5px solid var(--bdr);border-left:3px solid var(--b600);
+  border-radius:var(--r);padding:0.7rem 1rem;margin:1rem 0;font-size:12.5px;color:var(--txt2);line-height:1.6;
+}
+.vid-note strong{color:var(--txt);font-weight:500;}
+
+/* ── ACTORS GRID ── */
+.actors-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem;margin:1.1rem 0;}
+.actor-card{
+  background:var(--bg3);border-radius:var(--r);border:0.5px solid var(--bdr);
+  padding:0.55rem 0.75rem;transition:border-color 0.15s;
+}
+.actor-card:hover{border-color:var(--a400);}
+.actor-name{font-size:12.5px;font-weight:500;color:var(--txt);line-height:1.3;margin-bottom:2px;}
+.actor-meta{font-size:10.5px;color:var(--txt3);}
+.actor-links{margin-top:5px;display:flex;gap:6px;flex-wrap:wrap;}
+.actor-link{font-size:10px;font-weight:500;text-decoration:none;padding:1px 7px;border-radius:4px;}
+.actor-link.wiki{background:var(--g50);color:var(--g600);}
+.actor-link.wiki:hover{background:var(--g100);}
+.actor-badge{font-size:9.5px;padding:1px 6px;border-radius:4px;font-weight:500;}
+.ab-gold{background:var(--a50);color:var(--a600);}
+.ab-classic{background:var(--t50);color:var(--t600);}
+.ab-modern{background:var(--p50);color:var(--p600);}
+
+/* ── DOWNLOADABLE MATERIALS ── */
+.dl-section{margin:1.4rem 0;}
+.dl-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.85rem;margin:1.1rem 0;}
+@media(max-width:560px){.dl-grid{grid-template-columns:1fr;}}
+.dl-card{
+  border:0.5px solid var(--bdr2);border-radius:var(--rl);overflow:hidden;
+  cursor:pointer;transition:border-color 0.15s;
+}
+.dl-card:hover{border-color:var(--a400);}
+.dl-card-hd{padding:0.9rem 1rem;border-bottom:0.5px solid var(--bdr);}
+.dl-card-hd h4{font-size:13.5px;font-weight:500;color:var(--txt);margin-bottom:3px;}
+.dl-card-hd p{font-size:12px;color:var(--txt3);}
+.dl-card-body{padding:0.9rem 1rem;font-size:12.5px;color:var(--txt2);line-height:1.6;}
+.dl-card-footer{padding:0.6rem 1rem;background:var(--bg3);border-top:0.5px solid var(--bdr);font-size:11.5px;font-weight:500;color:var(--a600);display:flex;align-items:center;gap:6px;}
+
+/* ── WORKSHEET (printable) ── */
+.worksheet{background:var(--bg);border:0.5px solid var(--bdr2);border-radius:var(--rl);overflow:hidden;margin:1.4rem 0;}
+.ws-hd{background:var(--a50);padding:0.75rem 1.1rem;border-bottom:0.5px solid var(--a100);display:flex;align-items:center;justify-content:space-between;}
+.ws-hd h4{font-size:13px;font-weight:500;color:var(--a800);}
+.ws-print-btn{font-size:11px;padding:4px 12px;border:0.5px solid var(--a100);border-radius:var(--r);background:var(--bg);color:var(--a600);cursor:pointer;font-family:var(--sans);font-weight:500;}
+.ws-print-btn:hover{background:var(--a100);}
+.ws-body{padding:1.1rem 1.25rem;}
+.ws-field{margin-bottom:1rem;}
+.ws-field label{font-size:11.5px;font-weight:500;color:var(--txt2);text-transform:uppercase;letter-spacing:0.07em;display:block;margin-bottom:5px;}
+.ws-field .ws-line{border-bottom:0.5px solid var(--bdr2);height:28px;margin-bottom:4px;}
+.ws-field .ws-lines .ws-line{display:block;}
+.ws-section-title{font-size:12px;font-weight:500;color:var(--a600);text-transform:uppercase;letter-spacing:0.08em;margin:1.1rem 0 0.5rem;padding-bottom:0.3rem;border-bottom:1.5px solid var(--a400);}
+.ws-two{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+
+/* ── EMOTIONS BANK ── */
+.emo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;margin:1.1rem 0;}
+@media(max-width:500px){.emo-grid{grid-template-columns:repeat(2,1fr);}}
+.emo-cat{margin-bottom:1.1rem;}
+.emo-cat-title{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--txt3);font-weight:500;margin-bottom:0.5rem;}
+.emo-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.emo-chip{font-size:12px;padding:4px 12px;border-radius:20px;cursor:pointer;border:0.5px solid var(--bdr);background:var(--bg3);color:var(--txt2);transition:all 0.15s;font-family:var(--sans);}
+.emo-chip:hover{background:var(--a50);color:var(--a600);border-color:var(--a100);}
+.emo-chip.selected{background:var(--a50);color:var(--a600);border-color:var(--a400);font-weight:500;}
+.emo-result{background:var(--a50);border:0.5px solid var(--a100);border-radius:var(--r);padding:0.75rem 1rem;margin-top:0.75rem;font-size:13.5px;color:var(--a800);line-height:1.6;display:none;}
+.emo-result.show{display:block;}
+
+/* ── BADGES ── */
+.badge{display:inline-block;font-size:10.5px;font-weight:500;padding:2px 9px;border-radius:var(--r);margin:2px;}
+.ba{background:var(--a50);color:var(--a600);}
+.bt{background:var(--t50);color:var(--t600);}
+.bp{background:var(--p50);color:var(--p600);}
+
+/* ── NAV BOTTOM ── */
+.bnav{display:flex;gap:0.7rem;justify-content:flex-end;padding-top:1.4rem;border-top:0.5px solid var(--bdr);margin-top:1.75rem;}
+.btn{padding:7px 18px;border:0.5px solid var(--bdr2);background:transparent;color:var(--txt);border-radius:var(--r);font-family:var(--sans);font-size:13px;cursor:pointer;}
+.btn:hover{background:var(--bg3);}
+.btn-p{background:var(--a50);border-color:var(--a100);color:var(--a600);font-weight:500;}
+
+/* ── HR ── */
+hr.div{border:none;border-top:0.5px solid var(--bdr);margin:1.75rem 0;}
+
+/* ── DRAWERS ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.38);z-index:500;}
+.drawer{
+  position:fixed;right:0;top:0;bottom:0;width:430px;max-width:95vw;
+  background:var(--bg);z-index:501;display:flex;flex-direction:column;
+  box-shadow:-4px 0 20px rgba(0,0,0,0.12);
+  transform:translateX(100%);transition:transform 0.27s cubic-bezier(.4,0,.2,1);
+}
+.overlay.open{display:block;}
+.drawer.open{transform:translateX(0);}
+.drawer-hd{padding:1.1rem 1.25rem;border-bottom:0.5px solid var(--bdr2);display:flex;align-items:center;gap:10px;}
+.drawer-hd h3{font-size:15px;font-weight:500;color:var(--txt);flex:1;}
+.close-btn{background:none;border:0.5px solid var(--bdr2);border-radius:var(--r);padding:4px 10px;cursor:pointer;color:var(--txt2);font-size:12.5px;}
+.drawer-body{flex:1;overflow-y:auto;padding:1.1rem 1.25rem;}
+
+/* ── REF TABS ── */
+.ref-tabs{display:flex;border-bottom:0.5px solid var(--bdr);margin-bottom:0;}
+.ref-tab{flex:1;padding:0.6rem;border:none;background:transparent;font-size:12px;font-weight:500;color:var(--txt3);cursor:pointer;border-bottom:2px solid transparent;font-family:var(--sans);}
+.ref-tab.active{color:var(--a600);border-bottom-color:var(--a400);}
+.ref-group{margin-bottom:1.4rem;}
+.rg-label{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--txt3);font-weight:500;margin-bottom:0.5rem;margin-top:1rem;}
+.ref-item{padding:0.65rem 0;border-bottom:0.5px solid var(--bdr);}
+.ref-item:last-child{border-bottom:none;}
+.ri-title{font-size:13.5px;font-weight:500;color:var(--txt);line-height:1.3;margin-bottom:2px;}
+.ri-meta{font-size:11px;color:var(--txt3);}
+.ri-desc{font-size:12.5px;color:var(--txt2);margin:4px 0 5px;line-height:1.5;}
+.ri-link{font-size:11.5px;font-weight:500;color:var(--a600);text-decoration:none;}
+.ri-link:hover{text-decoration:underline;}
+
+/* ── VIDEOS DRAWER (list of thumb cards) ── */
+.vd-item{margin-bottom:1.25rem;border:0.5px solid var(--bdr);border-radius:var(--rl);overflow:hidden;}
+.vd-hd{padding:0.65rem 0.9rem;background:var(--bg3);border-bottom:0.5px solid var(--bdr);}
+.vd-hd strong{font-size:13px;font-weight:500;color:var(--txt);display:block;}
+.vd-hd span{font-size:11px;color:var(--txt3);}
+.vd-thumb{position:relative;padding-bottom:56.25%;background:#111;cursor:pointer;}
+.vd-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.82;}
+.vd-thumb:hover img{opacity:1;}
+.vd-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;}
+.vd-play-c{width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,0.4);}
+.vd-play-t{width:0;height:0;border-top:9px solid transparent;border-bottom:9px solid transparent;border-left:16px solid rgba(255,255,255,0.9);margin-left:3px;}
+.vd-desc{padding:0.65rem 0.9rem;font-size:12px;color:var(--txt2);line-height:1.5;}
+
+/* ── GLOBAL FOOTER ── */
+#gfooter{border-top:0.5px solid var(--bdr2);background:var(--bg2);padding:0.65rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;min-height:48px;}
+.gf-author{font-size:12px;color:var(--txt3);}
+.gf-author strong{font-weight:500;color:var(--txt2);}
+.gf-actions{display:flex;gap:7px;}
+.gf-btn{font-size:11.5px;padding:4px 12px;border:0.5px solid var(--bdr2);border-radius:var(--r);background:transparent;color:var(--txt2);cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:5px;}
+.gf-btn:hover{background:var(--bg3);}
+
+@media print{
+  #sidebar,#topbar,#breadcrumb,#gfooter,.bnav,#progress-bar{display:none!important;}
+  #app{height:auto;overflow:visible;}
+  #main{overflow:visible;}
+  .page{display:block!important;padding:0;}
+  body{font-size:11pt;}
+}
+</style>
+</head>
+<body>
+<div id="progress-bar" style="width:0%"></div>
+
+<div id="topbar">
+  <button id="menu-btn" onclick="toggleSidebar()">☰</button>
+  <span id="topbar-title">La técnica Meisner</span>
+</div>
+
+<div id="app">
+<!-- ═══ SIDEBAR ═══ -->
+<nav id="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-title">La técnica Meisner</div>
+    <div class="sb-logo-sub">Guía para actores naturales</div>
+  </div>
+  <div class="sb-section-label">Fundamentos</div>
+  <button class="sb-btn active" onclick="goTo(0)" id="nav0"><span class="sb-num">F</span>El principio central</button>
+  <div class="sb-div"></div>
+  <div class="sb-section-label">Componentes</div>
+  <button class="sb-btn" onclick="goTo(1)" id="nav1"><span class="sb-num">1</span>Ejercicio de repetición</button>
+  <button class="sb-btn" onclick="goTo(2)" id="nav2"><span class="sb-num">2</span>Actividad independiente</button>
+  <button class="sb-btn" onclick="goTo(3)" id="nav3"><span class="sb-num">3</span>Preparación emocional</button>
+  <button class="sb-btn" onclick="goTo(4)" id="nav4"><span class="sb-num">4</span>Escucha activa</button>
+  <button class="sb-btn" onclick="goTo(5)" id="nav5"><span class="sb-num">5</span>Trabajo de escena</button>
+  <div class="sb-div"></div>
+  <div class="sb-section-label">Contexto y práctica</div>
+  <button class="sb-btn" onclick="goTo(6)" id="nav6"><span class="sb-num">↔</span>Meisner vs. el Método</button>
+  <button class="sb-btn" onclick="goTo(7)" id="nav7"><span class="sb-num">!</span>Errores frecuentes</button>
+  <button class="sb-btn" onclick="goTo(8)" id="nav8"><span class="sb-num">↓</span>Material descargable</button>
+  <button class="sb-btn" onclick="goTo(9)" id="nav9"><span class="sb-num">★</span>Actores formados</button>
+  <div class="sb-div"></div>
+  <div class="sb-section-label">Recursos</div>
+  <button class="sb-action" onclick="openVideos()">▶ Ver todos los videos</button>
+  <button class="sb-action" onclick="openRefs()">📚 Referencias</button>
+</nav>
+
+<!-- ═══ MAIN ═══ -->
+<div id="main">
+  <div id="breadcrumb">
+    <span>Técnica Meisner</span><span class="bc-sep">›</span>
+    <span class="bc-cur" id="bc-label">El principio central</span>
+    <div class="bc-actions">
+      <button class="gf-btn" onclick="openVideos()">▶ Videos</button>
+      <button class="gf-btn" onclick="openRefs()">📚 Refs</button>
+    </div>
+  </div>
+
+<!-- ═══ PAGE 0: PRINCIPIO ═══ -->
+<div class="page active" id="p0">
+  <div class="hero">
+    <div class="kicker">Guía completa para actores naturales</div>
+    <h1>La técnica Meisner</h1>
+    <p class="hero-desc">El método más influyente del teatro norteamericano del siglo XX, desarrollado por Sanford Meisner a lo largo de más de 65 años en el Neighborhood Playhouse de Nueva York.</p>
+    <div class="pills">
+      <span class="pill">9 secciones</span><span class="pill">Teoría + ejercicios</span>
+      <span class="pill">Ejemplos reales</span><span class="pill">Material descargable</span>
+    </div>
+  </div>
+
+  <div class="vid-note">
+    <strong>Sobre los videos:</strong> todos los videos abren directamente en YouTube al hacer clic. Esta guía enlaza exclusivamente a contenido público disponible en esa plataforma. Si montas este sitio en tu propio dominio, el comportamiento será idéntico.
+  </div>
+
+  <div class="principle">
+    <p>"Actuar es la capacidad de comportarse de manera absolutamente verdadera bajo circunstancias imaginarias."</p>
+    <p class="psrc">— Sanford Meisner</p>
+  </div>
+
+  <p class="prose">Sanford Meisner (Brooklyn, 1905 – Los Ángeles, 1997) pasó más de medio siglo refinando una sola idea: <strong>el actor no debe fingir. Debe vivir.</strong> La diferencia entre un actor convincente y uno que parece "estar actuando" no está en el talento innato, sino en dónde pone su atención.</p>
+
+  <ul class="steps">
+    <li><div class="sn">1</div><div class="sc"><strong>Actúa para el público, no para su compañero</strong><span>Habla hacia fuera en lugar de dirigirse genuinamente a la otra persona. Resultado: el compañero de escena desaparece.</span></div></li>
+    <li><div class="sn">2</div><div class="sc"><strong>Ensaya emociones en lugar de vivirlas</strong><span>Decide de antemano "aquí me voy a poner triste" y reproduce una emoción planificada. Resultado: artificialidad total.</span></div></li>
+    <li><div class="sn">3</div><div class="sc"><strong>Piensa en el texto, no en el momento</strong><span>Está pendiente de la siguiente línea en lugar de escuchar lo que ocurre ahora. Resultado: ausencia real en escena.</span></div></li>
+  </ul>
+
+  <!-- VIDEO CARD -->
+  <div class="vid-card">
+    <div class="vid-card-hd"><strong>Documental PBS — "The Theater's Best Kept Secret" (1984)</strong><span class="vid-type">Original · 1h</span></div>
+    <a href="https://www.youtube.com/watch?v=cCshbsBgmHk" target="_blank" rel="noopener" style="display:block;text-decoration:none;">
+      <div class="vid-thumb-wrap">
+        <img src="https://img.youtube.com/vi/cCshbsBgmHk/hqdefault.jpg" alt="Sanford Meisner: The Theater's Best Kept Secret" loading="lazy">
+        <div class="vid-play-btn">
+          <div class="vid-play-circle"><div class="vid-play-triangle"></div></div>
+          <div class="vid-caption">Ver en YouTube</div>
+        </div>
+      </div>
+    </a>
+    <div class="vid-card-footer">
+      <span>Dirigido por Nick Doob · Producido por Sydney Pollack · PBS American Masters 1984</span>
+      <a href="https://www.youtube.com/watch?v=cCshbsBgmHk" target="_blank" rel="noopener" class="vid-link">Abrir ↗</a>
+    </div>
+  </div>
+
+  <div class="bnav"><button class="btn btn-p" onclick="goTo(1)">Siguiente: ejercicio de repetición →</button></div>
+</div><!-- /p0 -->
+
+<!-- ═══ PAGE 1: REPETICIÓN ═══ -->
+<div class="page" id="p1">
+  <div class="sec-hd">
+    <div class="sec-kicker">Componente 01 de 05</div>
+    <h2>El ejercicio de repetición</h2>
+    <p class="tagline">La piedra angular de toda la técnica</p>
+  </div>
+
+  <div class="quote"><p>"No hagas nada hasta que algo te haga hacerlo."</p><div class="attr">— Sanford Meisner</div></div>
+
+  <p class="prose">El ejercicio de repetición es el instrumento más característico de Meisner. En su forma más básica parece absurdo: dos actores frente a frente repiten la misma frase una y otra vez. En esa aparente monotonía ocurre algo profundo: <strong>el texto pierde importancia; la persona, no.</strong></p>
+
+  <ul class="steps">
+    <li><div class="sn">1</div><div class="sc"><strong>Observación neutral</strong><span>Actor A hace una observación objetiva sobre B: "Llevas una camisa azul." No es un juicio.</span></div></li>
+    <li><div class="sn">2</div><div class="sc"><strong>Repetición literal</strong><span>B devuelve en primera persona: "Llevo una camisa azul." Sin añadir ni actuar.</span></div></li>
+    <li><div class="sn">3</div><div class="sc"><strong>Energía cambiante</strong><span>Las palabras son idénticas pero la energía cambia según lo que cada uno siente en ese momento real.</span></div></li>
+    <li><div class="sn">4</div><div class="sc"><strong>El cambio surge solo</strong><span>Algo genuino ocurre. Un actor sonríe. La frase cambia orgánicamente: "Te estás riendo." Solo cuando lo observado es verdad.</span></div></li>
+    <li><div class="sn">5</div><div class="sc"><strong>Punto de vista propio</strong><span>"Pareces incómodo." Tener el coraje de decir lo que ves —eso es el núcleo del ejercicio.</span></div></li>
+  </ul>
+
+  <div class="dialogue">
+    <div class="d-label">Ejemplo de diálogo real</div>
+    <div class="d-line"><div class="d-who">A</div><div><div class="d-txt">Llevas el pelo suelto.</div><div class="d-note">(observación objetiva)</div></div></div>
+    <div class="d-line"><div class="d-who">B</div><div><div class="d-txt">Llevo el pelo suelto.</div></div></div>
+    <div class="d-line"><div class="d-who">A</div><div><div class="d-txt">Llevas el pelo suelto.</div></div></div>
+    <div class="d-line"><div class="d-who">B</div><div><div class="d-txt">Llevo el pelo suelto.</div><div class="d-note">(B empieza a reírse levemente)</div></div></div>
+    <div class="d-line"><div class="d-who">A</div><div><div class="d-txt">Te estás riendo.</div><div class="d-note">(cambio orgánico)</div></div></div>
+    <div class="d-line"><div class="d-who">B</div><div><div class="d-txt">Me estoy riendo.</div></div></div>
+    <div class="d-line"><div class="d-who">A</div><div><div class="d-txt">No sé por qué te ríes.</div><div class="d-note">(punto de vista genuino)</div></div></div>
+    <div class="d-line"><div class="d-who">B</div><div><div class="d-txt">Yo tampoco lo sé.</div><div class="d-note">(respuesta auténtica, no planificada)</div></div></div>
+  </div>
+
+  <!-- EMOCIONES PARA REPETICIÓN -->
+  <h3>Semillas emocionales para el ejercicio</h3>
+  <p class="prose">Una vez que dominas la repetición básica, puedes entrar al ejercicio con un estado emocional activado por la imaginación —no fingido. Selecciona una semilla y permítete habitarla antes de sentarte frente a tu compañero. Luego suéltala y deja que el otro actor tome el mando.</p>
+
+  <div id="emo-section">
+    <div class="emo-cat">
+      <div class="emo-cat-title">Estados de tensión</div>
+      <div class="emo-chips">
+        <button class="emo-chip" onclick="selectEmo(this,'tensión','Acabas de descubrir algo que cambia todo. No sabes cómo reaccionar todavía.')">Tensión</button>
+        <button class="emo-chip" onclick="selectEmo(this,'urgencia','Tienes muy poco tiempo. Lo que necesitas no puede esperar más.')">Urgencia</button>
+        <button class="emo-chip" onclick="selectEmo(this,'sospecha','Algo en esta persona no cuadra. No sabes qué, pero lo sientes.')">Sospecha</button>
+        <button class="emo-chip" onclick="selectEmo(this,'miedo','Imagina que acabas de recibir una noticia que amenaza algo que amas.')">Miedo</button>
+        <button class="emo-chip" onclick="selectEmo(this,'rabia contenida','Alguien te ha fallado profundamente y todavía no has podido decírselo.')">Rabia contenida</button>
+      </div>
+    </div>
+    <div class="emo-cat">
+      <div class="emo-cat-title">Estados de apertura</div>
+      <div class="emo-chips">
+        <button class="emo-chip" onclick="selectEmo(this,'alegría inesperada','Acabas de enterarte de algo maravilloso que no esperabas. Todavía no lo has procesado.')">Alegría inesperada</button>
+        <button class="emo-chip" onclick="selectEmo(this,'curiosidad','Esta persona sabe algo que tú no. Lo puedes sentir.')">Curiosidad</button>
+        <button class="emo-chip" onclick="selectEmo(this,'alivio','Algo que te preocupaba mucho acaba de resolverse.')">Alivio</button>
+        <button class="emo-chip" onclick="selectEmo(this,'ternura','Alguien cercano te necesita. Lo ves frágil.')">Ternura</button>
+        <button class="emo-chip" onclick="selectEmo(this,'euforia','Has logrado algo que parecía imposible. El cuerpo todavía no lo cree.')">Euforia</button>
+      </div>
+    </div>
+    <div class="emo-cat">
+      <div class="emo-cat-title">Estados de pérdida</div>
+      <div class="emo-chips">
+        <button class="emo-chip" onclick="selectEmo(this,'duelo','Imagina que acabas de despedirte de alguien para siempre.')">Duelo</button>
+        <button class="emo-chip" onclick="selectEmo(this,'traición','Alguien en quien confiabas plenamente te ha fallado.')">Traición</button>
+        <button class="emo-chip" onclick="selectEmo(this,'vergüenza','Hiciste algo de lo que te arrepientes profundamente. Esta persona lo sabe.')">Vergüenza</button>
+        <button class="emo-chip" onclick="selectEmo(this,'nostalgia','Ves en esta persona algo que perdiste hace tiempo.')">Nostalgia</button>
+        <button class="emo-chip" onclick="selectEmo(this,'soledad','Llevas mucho tiempo sin que nadie te vea de verdad.')">Soledad</button>
+      </div>
+    </div>
+    <div class="emo-cat">
+      <div class="emo-cat-title">Estados de poder</div>
+      <div class="emo-chips">
+        <button class="emo-chip" onclick="selectEmo(this,'confianza plena','Sabes exactamente lo que quieres y sabes que puedes conseguirlo.')">Confianza plena</button>
+        <button class="emo-chip" onclick="selectEmo(this,'desprecio','Lo que esta persona tiene para decirte no te importa.')">Desprecio</button>
+        <button class="emo-chip" onclick="selectEmo(this,'seducción','Quieres algo de esta persona. Sabes cómo conseguirlo.')">Seducción</button>
+        <button class="emo-chip" onclick="selectEmo(this,'indignación','Algo injusto acaba de ocurrir. Tienes razón y lo sabes.')">Indignación</button>
+        <button class="emo-chip" onclick="selectEmo(this,'indiferencia estratégica','Esta persona no puede afectarte. O eso intentas creer.')">Indiferencia</button>
+      </div>
+    </div>
+    <div id="emo-result" class="emo-result"></div>
+  </div>
+
+  <!-- VIDEO -->
+  <div class="vid-card" style="margin-top:1.75rem;">
+    <div class="vid-card-hd"><strong>Demostración del ejercicio de repetición</strong><span class="vid-type">Ejercicio en clase</span></div>
+    <a href="https://www.youtube.com/watch?v=QFnLM4VNfPg" target="_blank" rel="noopener" style="display:block;text-decoration:none;">
+      <div class="vid-thumb-wrap">
+        <img src="https://img.youtube.com/vi/QFnLM4VNfPg/hqdefault.jpg" alt="Repetition Exercise Demo" loading="lazy">
+        <div class="vid-play-btn"><div class="vid-play-circle"><div class="vid-play-triangle"></div></div><div class="vid-caption">Ver en YouTube</div></div>
+      </div>
+    </a>
+    <div class="vid-card-footer"><span>Demostración con dos actores · Evolución desde frase simple hasta contacto real</span><a href="https://www.youtube.com/watch?v=QFnLM4VNfPg" target="_blank" class="vid-link">Abrir ↗</a></div>
+  </div>
+
+  <div class="alert alert-warn"><div class="alabel">Error frecuente: "readings"</div><p>Meisner llamaba "readings" al intento de hacer interesante el ejercicio con énfasis calculados. Si el actor decide de antemano cómo decir la frase, el ejercicio fracasa. El cambio debe surgir de lo que el compañero te hace sentir.</p></div>
+
+  <div class="bnav"><button class="btn" onclick="goTo(0)">← Anterior</button><button class="btn btn-p" onclick="goTo(2)">Siguiente: actividad independiente →</button></div>
+</div><!-- /p1 -->
+
+<!-- ═══ PAGE 2: ACTIVIDAD INDEPENDIENTE ═══ -->
+<div class="page" id="p2">
+  <div class="sec-hd"><div class="sec-kicker">Componente 02 de 05</div><h2>La actividad independiente</h2><p class="tagline">Actuar es hacer, no hablar</p></div>
+  <div class="quote"><p>"La actuación no es hablar. La actuación es hacer."</p><div class="attr">— Sanford Meisner</div></div>
+  <p class="prose">Cuando el cuerpo está genuinamente ocupado en algo que importa, la mente deja de gestionar la actuación y el comportamiento se vuelve orgánico. La actividad debe ser <strong>difícil, específica y personalmente significativa.</strong></p>
+  <div class="two-col">
+    <div class="ccomp"><h4>Actividades que funcionan</h4><ul><li>Reparar el reloj de tu abuelo fallecido antes de un funeral</li><li>Escribir una carta de despedida sin errores</li><li>Aprender de memoria un poema para alguien que amas</li><li>Coser un botón en el único traje para una entrevista hoy</li></ul></div>
+    <div class="ccomp"><h4>Actividades que no funcionan</h4><ul><li>Limpiar la mesa (demasiado fácil)</li><li>Leer un libro (pasivo)</li><li>"Estar triste en mi cuarto" (no es actividad)</li><li>Cualquier cosa sin urgencia ni dificultad real</li></ul></div>
+  </div>
+  <div class="vid-card">
+    <div class="vid-card-hd"><strong>Actividad independiente con repetición</strong><span class="vid-type">Clase en estudio</span></div>
+    <a href="https://www.youtube.com/watch?v=M_oE5pEjPco" target="_blank" rel="noopener" style="display:block;text-decoration:none;">
+      <div class="vid-thumb-wrap">
+        <img src="https://img.youtube.com/vi/M_oE5pEjPco/hqdefault.jpg" alt="Independent Activity Meisner" loading="lazy">
+        <div class="vid-play-btn"><div class="vid-play-circle"><div class="vid-play-triangle"></div></div><div class="vid-caption">Ver en YouTube</div></div>
+      </div>
+    </a>
+    <div class="vid-card-footer"><span>Cómo la concentración en una tarea libera al actor de la autogestión consciente</span><a href="https://www.youtube.com/watch?v=M_oE5pEjPco" target="_blank" class="vid-link">Abrir ↗</a></div>
+  </div>
+  <div class="bnav"><button class="btn" onclick="goTo(1)">← Anterior</button><button class="btn btn-p" onclick="goTo(3)">Siguiente: preparación emocional →</button></div>
+</div><!-- /p2 -->
+
+<!-- ═══ PAGE 3: PREP EMOCIONAL ═══ -->
+<div class="page" id="p3">
+  <div class="sec-hd"><div class="sec-kicker">Componente 03 de 05</div><h2>La preparación emocional</h2><p class="tagline">Cómo entrar en escena emocionalmente vivo</p></div>
+  <p class="prose">La preparación emocional es lo que el actor hace <em>antes</em> de que comience la escena. No es ensayo de emociones —es el proceso de activar un estado emocional genuino mediante la <strong>imaginación</strong>, no la memoria traumática.</p>
+  <ul class="steps">
+    <li><div class="sn">1</div><div class="sc"><strong>Identifica el estado del personaje al inicio</strong><span>No "triste" —sino "acaba de enterarse de que su madre está en el hospital".</span></div></li>
+    <li><div class="sn">2</div><div class="sc"><strong>Crea un escenario imaginario equivalente para ti</strong><span>Específico, sensorial, personalmente resonante. No vivido: imaginado.</span></div></li>
+    <li><div class="sn">3</div><div class="sc"><strong>Habita ese escenario antes de entrar</strong><span>Varios minutos en silencio, fuera de escena. Meisner llamaba esto "el trabajo privado" del actor.</span></div></li>
+    <li><div class="sn">4</div><div class="sc"><strong>Entra y suelta la preparación</strong><span>La emoción preparada sirve solo para el primer instante. Luego, lo que el compañero te dé es lo único que importa.</span></div></li>
+  </ul>
+  <div class="two-col">
+    <div class="ccomp"><h4>Imaginación (Meisner)</h4><ul><li>Construye escenarios imaginarios</li><li>No requiere trauma personal real</li><li>Protege la salud mental del actor</li><li>Permite interpretar cualquier personaje</li></ul></div>
+    <div class="ccomp"><h4>Memoria afectiva (Strasberg)</h4><ul><li>Recupera experiencias vividas</li><li>Puede exponer a retraumatización</li><li>Meisner lo consideró "no saludable"</li><li>Limitado por la historia del actor</li></ul></div>
+  </div>
+  <div class="vid-card">
+    <div class="vid-card-hd"><strong>Preparación emocional con imaginación</strong><span class="vid-type">Masterclass</span></div>
+    <a href="https://www.youtube.com/watch?v=Yl0VRafF0pA" target="_blank" rel="noopener" style="display:block;text-decoration:none;">
+      <div class="vid-thumb-wrap">
+        <img src="https://img.youtube.com/vi/Yl0VRafF0pA/hqdefault.jpg" alt="Emotional Preparation Meisner" loading="lazy">
+        <div class="vid-play-btn"><div class="vid-play-circle"><div class="vid-play-triangle"></div></div><div class="vid-caption">Ver en YouTube</div></div>
+      </div>
+    </a>
+    <div class="vid-card-footer"><span>Diferencia entre imaginación y memoria afectiva</span><a href="https://www.youtube.com/watch?v=Yl0VRafF0pA" target="_blank" class="vid-link">Abrir ↗</a></div>
+  </div>
+  <div class="bnav"><button class="btn" onclick="goTo(2)">← Anterior</button><button class="btn btn-p" onclick="goTo(4)">Siguiente: escucha activa →</button></div>
+</div><!-- /p3 -->
+
+<!-- ═══ PAGE 4: ESCUCHA ═══ -->
+<div class="page" id="p4">
+  <div class="sec-hd"><div class="sec-kicker">Componente 04 de 05</div><h2>La escucha activa y el momento a momento</h2><p class="tagline">El don más raro y más valioso en escena</p></div>
+  <div class="quote"><p>"El problema con la mayoría de los actores es que no escuchan. Y no escuchan porque están pensando en lo que van a decir."</p><div class="attr">— Sanford Meisner</div></div>
+  <div class="ccard"><div class="clabel">Los tres niveles de escucha</div><div class="ctitle">Oír → Escuchar → Ser afectado</div><p class="cbody"><strong>Oír</strong>: el sonido llega. <strong>Escuchar</strong>: procesas el significado. <strong>Ser afectado</strong>: el nivel que Meisner exigía — dejar que lo que el otro dice y hace te cambie algo por dentro. Solo desde ese tercer nivel emerge una respuesta genuina.</p></div>
+  <div class="dialogue">
+    <div class="d-label">Escucha real vs. escucha fingida</div>
+    <div class="d-line"><div class="d-who">A</div><div><div class="d-txt">Encontré las cartas. Sé todo.</div></div></div>
+    <div class="d-line"><div class="d-who">B★</div><div><div class="d-txt">No sé de qué me hablas.</div><div class="d-note">★ Respuesta ENSAYADA: B ya sabía que iba a negar antes de escuchar</div></div></div>
+    <div class="d-line"><div class="d-who">B</div><div><div class="d-txt">(pausa real — deja que las palabras aterricen)</div><div class="d-note">Respuesta DESDE LA ESCUCHA: procesa primero</div></div></div>
+    <div class="d-line"><div class="d-who">B</div><div><div class="d-txt">¿Las encontraste?</div><div class="d-note">(emergente, no planificada)</div></div></div>
+  </div>
+  <div class="vid-card">
+    <div class="vid-card-hd"><strong>Meisner sobre escuchar y presencia en escena</strong><span class="vid-type">Entrevista + clase</span></div>
+    <a href="https://www.youtube.com/watch?v=e6OsGPQAlMQ" target="_blank" rel="noopener" style="display:block;text-decoration:none;">
+      <div class="vid-thumb-wrap">
+        <img src="https://img.youtube.com/vi/e6OsGPQAlMQ/hqdefault.jpg" alt="Meisner on listening" loading="lazy">
+        <div class="vid-play-btn"><div class="vid-play-circle"><div class="vid-play-triangle"></div></div><div class="vid-caption">Ver en YouTube</div></div>
+      </div>
+    </a>
+    <div class="vid-card-footer"><span>El principio de escucha como base de toda reacción orgánica</span><a href="https://www.youtube.com/watch?v=e6OsGPQAlMQ" target="_blank" class="vid-link">Abrir ↗</a></div>
+  </div>
+  <div class="bnav"><button class="btn" onclick="goTo(3)">← Anterior</button><button class="btn btn-p" onclick="goTo(5)">Siguiente: trabajo de escena →</button></div>
+</div><!-- /p4 -->
+
+<!-- ═══ PAGE 5: ESCENA ═══ -->
+<div class="page" id="p5">
+  <div class="sec-hd"><div class="sec-kicker">Componente 05 de 05</div><h2>El trabajo de escena e improvisación</h2><p class="tagline">Cuando todos los ladrillos se convierten en un edificio</p></div>
+  <div class="ccard"><div class="clabel">El orden de Meisner</div><div class="ctitle">Primero la vida. Después las palabras.</div><p class="cbody">Meisner insistía en trabajar la escena sin texto escrito primero. Los actores improvisan hasta que las emociones y relaciones son genuinas. Solo entonces se introduce el diálogo del dramaturgo. El texto debe sonar "como si lo dijeras por primera vez, cada vez."</p></div>
+  <div class="exbox">
+    <div class="ex-hd"><p>Ejercicio práctico · Escena en cuatro pasos</p></div>
+    <div class="ex-body">
+      <p class="prose"><strong>Paso 1.</strong> Define las circunstancias: quiénes son, qué relación tienen, qué acaba de ocurrir, qué quiere cada uno del otro.</p>
+      <p class="prose"><strong>Paso 2.</strong> Improvisa sin texto. Una sola condición: escucha realmente y responde desde eso.</p>
+      <p class="prose"><strong>Paso 3.</strong> Incorpora gradualmente el texto. Cuando una línea te salga sola —sin pensarla— es que está viva.</p>
+      <p class="prose"><strong>Paso 4.</strong> El criterio no es "¿suena bien?" sino "¿está ocurriendo algo real entre los dos actores?"</p>
+    </div>
+  </div>
+  <div class="alert alert-warn"><div class="alabel">Trampa: provocar en lugar de responder</div><p>Meisner advertía sobre actores que usaban la improvisación para "provocar" al compañero. Forzar una reacción —en lugar de dejarte afectar— es una forma sutil de control que destruye la autenticidad.</p></div>
+  <div class="bnav"><button class="btn" onclick="goTo(4)">← Anterior</button><button class="btn btn-p" onclick="goTo(6)">Siguiente: Meisner vs. el Método →</button></div>
+</div><!-- /p5 -->
+
+<!-- ═══ PAGE 6: COMPARACIÓN ═══ -->
+<div class="page" id="p6">
+  <div class="sec-hd"><div class="sec-kicker">Contexto histórico</div><h2>Meisner frente al Método de Strasberg</h2><p class="tagline">Dos respuestas al mismo problema, caminos opuestos</p></div>
+  <div class="principle"><p>Strasberg mira hacia adentro, hacia el pasado.<br>Meisner mira hacia afuera, hacia el presente.</p></div>
+  <div class="two-col">
+    <div class="ccomp"><h4>Técnica Meisner</h4><ul><li>La verdad viene del compañero en escena</li><li>Usa la imaginación para emociones</li><li>Foco en el presente, el instante</li><li>Reacción antes que planificación</li><li>Atención hacia afuera (el otro actor)</li><li>Protege la salud mental</li><li>El texto llega al final del proceso</li></ul></div>
+    <div class="ccomp"><h4>Method Acting (Strasberg)</h4><ul><li>La verdad viene de la memoria personal</li><li>Usa recuerdos reales (memoria afectiva)</li><li>Foco en el pasado del actor</li><li>Planificación desde lo interno</li><li>Atención hacia adentro (el yo del actor)</li><li>Puede ser emocionalmente peligroso</li><li>El texto se trabaja desde el principio</li></ul></div>
+  </div>
+  <div class="quote"><p>"He podido identificar a sus alumnos en las audiciones. Son los más honestos, los más simples. No añaden complicaciones que no son necesarias."</p><div class="attr">— Arthur Miller sobre los actores formados por Meisner</div></div>
+  <div class="alert alert-info"><div class="alabel">Para ir más lejos</div><p>La sección "Actores formados" (sección 9 de esta guía) muestra todos los actores confirmados que han trabajado con la técnica, con enlaces a sus páginas de Wikipedia.</p></div>
+  <div class="bnav"><button class="btn" onclick="goTo(5)">← Anterior</button><button class="btn btn-p" onclick="goTo(7)">Siguiente: errores frecuentes →</button></div>
+</div><!-- /p6 -->
+
+<!-- ═══ PAGE 7: ERRORES ═══ -->
+<div class="page" id="p7">
+  <div class="sec-hd"><div class="sec-kicker">Guía práctica</div><h2>Errores frecuentes y cómo corregirlos</h2><p class="tagline">Los obstáculos más comunes del actor que empieza</p></div>
+  <ul class="steps">
+    <li><div class="sn">1</div><div class="sc"><strong>"Actuar las emociones" (result acting)</strong><span>Reproduce gestos de tristeza porque "aquí hay que estar triste". Antídoto: enfoca tu atención en lo que quieres del otro actor.</span></div></li>
+    <li><div class="sn">2</div><div class="sc"><strong>Mirar al compañero sin verlo</strong><span>Los ojos están sobre el compañero pero la mente está en el texto. Meisner: mira a la persona, no al actor.</span></div></li>
+    <li><div class="sn">3</div><div class="sc"><strong>Aferrarse a la emoción preparada</strong><span>Conservan la emoción preparada aunque la escena pida otra cosa. La preparación es solo el inicio.</span></div></li>
+    <li><div class="sn">4</div><div class="sc"><strong>Controlar el ejercicio de repetición</strong><span>Decidir cuándo "cambiar" la frase. Todo control destruye la espontaneidad. El cambio debe sorprenderte a ti también.</span></div></li>
+    <li><div class="sn">5</div><div class="sc"><strong>Interpretar palabras en lugar de necesidades</strong><span>"Te odio" no es la información importante. Lo importante es lo que quieres del otro.</span></div></li>
+    <li><div class="sn">6</div><div class="sc"><strong>No confiar en el instinto</strong><span>El actor tiene un impulso genuino y lo filtra porque "no está en el guión". Meisner: confía en el primer impulso. El segundo ya es cálculo.</span></div></li>
+  </ul>
+  <div class="quote"><p>"Eso es lo que es la técnica. Eso es lo que es el oficio. No necesitarme más a mí. Saber cómo trabajar y cómo arreglarlo cuando no funciona."</p><div class="attr">— Sanford Meisner, sobre el objetivo final de su enseñanza</div></div>
+  <div class="bnav"><button class="btn" onclick="goTo(6)">← Anterior</button><button class="btn btn-p" onclick="goTo(8)">Siguiente: material descargable →</button></div>
+</div><!-- /p7 -->
+
+<!-- ═══ PAGE 8: MATERIAL DESCARGABLE ═══ -->
+<div class="page" id="p8">
+  <div class="sec-hd"><div class="sec-kicker">Herramientas de trabajo</div><h2>Material descargable para análisis de escenas</h2><p class="tagline">Fichas de trabajo para aplicar la técnica Meisner en ensayo</p></div>
+  <p class="prose">Estas fichas están diseñadas para trabajarlas antes del ensayo, no durante. Imprímelas o ábrelas en tu teléfono y completa cada campo con honestidad. El objetivo es llegar al ensayo con las circunstancias claras —para luego olvidarlas y vivir el momento.</p>
+  <div class="alert alert-tip"><div class="alabel">Cómo usar estas fichas</div><p>Completa la ficha solo. Antes de compartirla con tu compañero de escena, haz el ejercicio de repetición durante 5 minutos sin mencionar el análisis. El trabajo preparatorio debe quedar bajo la actuación, no sobre ella.</p></div>
+
+  <!-- FICHA 1 -->
+  <div class="worksheet">
+    <div class="ws-hd">
+      <h4>Ficha 1 — Análisis de circunstancias dadas</h4>
+      <button class="ws-print-btn" onclick="printSheet('ws1')">Imprimir / Guardar PDF</button>
+    </div>
+    <div class="ws-body" id="ws1">
+      <div class="ws-section-title">Identidad del personaje</div>
+      <div class="ws-two">
+        <div>
+          <div class="ws-field"><label>Nombre del personaje</label><div class="ws-line"></div></div>
+          <div class="ws-field"><label>Obra / película</label><div class="ws-line"></div></div>
+        </div>
+        <div>
+          <div class="ws-field"><label>Escena n.°</label><div class="ws-line"></div></div>
+          <div class="ws-field"><label>Actor / fecha</label><div class="ws-line"></div></div>
+        </div>
+      </div>
+
+      <div class="ws-section-title">Circunstancias inmediatas (antes de entrar)</div>
+      <div class="ws-field"><label>¿Qué acaba de ocurrir justo antes de esta escena?</label><div class="ws-lines"><div class="ws-line"></div><div class="ws-line"></div></div></div>
+      <div class="ws-field"><label>¿Cuál es el estado emocional del personaje al entrar?</label><div class="ws-lines"><div class="ws-line"></div><div class="ws-line"></div></div></div>
+      <div class="ws-field"><label>¿Qué imagen imaginaria activarás antes de entrar en escena? (preparación emocional)</label><div class="ws-lines"><div class="ws-line"></div><div class="ws-line"></div><div class="ws-line"></div></div></div>
+
+      <div class="ws-section-title">Relación y objetivo</div>
+      <div class="ws-two">
+        <div>
+          <div class="ws-field"><label>¿Quién es la otra persona para tu personaje?</label><div class="ws-line"></div><div class="ws-line"></div></div>
+          <div class="ws-field"><label>¿Qué historia hay entre los dos?</label><div class="ws-line"></div><div class="ws-line"></div></div>
+        </div>
+        <div>
+          <div class="ws-field"><label>¿Qué quieres de esa persona en esta escena? (objetivo activo)</label><div class="ws-line"></div><div class="ws-line"></div></div>
+          <div class="ws-field"><label>¿Por qué lo necesitas AHORA?</label><div class="ws-line"></div><div class="ws-line"></div></div>
+        </div>
+      </div>
+
+      <div class="ws-section-title">Actividad independiente (si aplica)</div>
+      <div class="ws-field"><label>¿Qué estás haciendo físicamente cuando comienza la escena?</label><div class="ws-line"></div></div>
+      <div class="ws-field"><label>¿Por qué es urgente o importante esa actividad para ti?</label><div class="ws-lines"><div class="ws-line"></div><div class="ws-line"></div></div></div>
+
+      <div class="ws-section-title">Reflexión post-ensayo</div>
+      <div class="ws-field"><label>¿Hubo momentos en que te desconectaste del compañero? ¿Cuándo?</label><div class="ws-lines"><div class="ws-line"></div><div class="ws-line"></div></div></div>
+      <div class="ws-field"><label>¿Respondiste desde el instinto o desde el plan?</label><div class="ws-lines"><div class="ws-line"></div></div></div>
+    </div>
+  </div>
+
+  <!-- FICHA 2 -->
+  <div class="worksheet">
+    <div class="ws-hd">
+      <h4>Ficha 2 — Semilla emocional para el ejercicio de repetición</h4>
+      <button class="ws-print-btn" onclick="printSheet('ws2')">Imprimir / Guardar PDF</button>
+    </div>
+    <div class="ws-body" id="ws2">
+      <p style="font-size:13px;color:var(--txt2);margin-bottom:1rem;line-height:1.6;">Completa esta ficha solo, en silencio, antes de sentarte frente a tu compañero. No la compartas. Este es tu trabajo privado.</p>
+
+      <div class="ws-section-title">La semilla</div>
+      <div class="ws-field"><label>¿Qué emoción o estado quieres activar hoy?</label><div class="ws-line"></div></div>
+      <div class="ws-field"><label>Escenario imaginario (específico, sensorial, en presente): ¿Qué está ocurriendo en tu imaginación?</label><div class="ws-lines"><div class="ws-line"></div><div class="ws-line"></div><div class="ws-line"></div></div></div>
+      <div class="ws-field"><label>¿Qué sientes en el cuerpo cuando imaginas ese escenario?</label><div class="ws-lines"><div class="ws-line"></div><div class="ws-line"></div></div></div>
+
+      <div class="ws-section-title">Instrucciones de trabajo</div>
+      <div style="background:var(--bg3);border-radius:var(--r);padding:0.9rem 1rem;font-size:13px;color:var(--txt2);line-height:1.7;">
+        <strong style="display:block;color:var(--txt);margin-bottom:0.5rem;">Protocolo de 5 minutos:</strong>
+        <div>1. Siéntate solo. Cierra los ojos. Habita el escenario imaginario durante 2 minutos.</div>
+        <div>2. Abre los ojos. Sin hablar, observa el espacio a tu alrededor durante 30 segundos.</div>
+        <div>3. Cuando te sientes frente a tu compañero, <em>suelta la imagen</em>. Lleva solo el estado.</div>
+        <div>4. Comienza la repetición. Lo que el compañero te dé es más importante que lo que preparaste.</div>
+      </div>
+
+      <div class="ws-section-title">Reflexión post-ejercicio</div>
+      <div class="ws-field"><label>¿La semilla emocional sirvió de punto de partida o intenté mantenerla durante todo el ejercicio?</label><div class="ws-lines"><div class="ws-line"></div><div class="ws-line"></div></div></div>
+      <div class="ws-field"><label>¿Hubo un momento en que algo del compañero te afectó realmente? ¿Qué fue?</label><div class="ws-lines"><div class="ws-line"></div><div class="ws-line"></div></div></div>
+    </div>
+  </div>
+
+  <!-- FICHA 3 -->
+  <div class="worksheet">
+    <div class="ws-hd">
+      <h4>Ficha 3 — Observación de escena (para el director o el profesor)</h4>
+      <button class="ws-print-btn" onclick="printSheet('ws3')">Imprimir / Guardar PDF</button>
+    </div>
+    <div class="ws-body" id="ws3">
+      <div class="ws-two">
+        <div><div class="ws-field"><label>Actores observados</label><div class="ws-line"></div><div class="ws-line"></div></div></div>
+        <div><div class="ws-field"><label>Fecha / ensayo n.°</label><div class="ws-line"></div></div></div>
+      </div>
+      <div class="ws-section-title">Lista de verificación Meisner</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem 1.5rem;font-size:13px;color:var(--txt2);">
+        <div>☐ Escucha activa visible</div><div>☐ Respuestas desde el instinto</div>
+        <div>☐ Contacto visual genuino</div><div>☐ Pausas reales (no calculadas)</div>
+        <div>☐ Actividad creíble (si aplica)</div><div>☐ Objetivo activo presente</div>
+        <div>☐ Ausencia de "result acting"</div><div>☐ Relación real entre los actores</div>
+        <div>☐ Texto que suena como primera vez</div><div>☐ Cambios de energía orgánicos</div>
+      </div>
+      <div class="ws-field" style="margin-top:1rem;"><label>Momentos de verdad destacados</label><div class="ws-lines"><div class="ws-line"></div><div class="ws-line"></div><div class="ws-line"></div></div></div>
+      <div class="ws-field"><label>Puntos de trabajo prioritarios</label><div class="ws-lines"><div class="ws-line"></div><div class="ws-line"></div><div class="ws-line"></div></div></div>
+    </div>
+  </div>
+
+  <div class="bnav"><button class="btn" onclick="goTo(7)">← Anterior</button><button class="btn btn-p" onclick="goTo(9)">Siguiente: actores formados →</button></div>
+</div><!-- /p8 -->
+
+<!-- ═══ PAGE 9: ACTORES ═══ -->
+<div class="page" id="p9">
+  <div class="sec-hd"><div class="sec-kicker">Legado</div><h2>Actores formados con la técnica Meisner</h2><p class="tagline">Lista validada con fuentes primarias — Wikipedia y fuentes académicas</p></div>
+  <p class="prose">Lista compilada a partir de la Wikipedia de la Técnica Meisner, la Wikipedia de Sanford Meisner, Britannica, IMDB y diversas escuelas de su legado directo. Se indican solo actores con confirmación en al menos dos fuentes.</p>
+
+  <h3>Alumnos directos del Neighborhood Playhouse (con Meisner como profesor)</h3>
+  <div class="actors-grid">
+    <div class="actor-card"><div class="actor-name">Robert Duvall</div><div class="actor-meta">Actor · 2 Oscar</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Robert_Duvall" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Grace Kelly</div><div class="actor-meta">Actriz · Oscar, Mónaco</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Grace_Kelly" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Gregory Peck</div><div class="actor-meta">Actor · Oscar 1963</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Gregory_Peck" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Diane Keaton</div><div class="actor-meta">Actriz · Oscar 1978</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Diane_Keaton" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Steve McQueen</div><div class="actor-meta">Actor · "Rey del frío"</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Steve_McQueen" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Jeff Goldblum</div><div class="actor-meta">Actor · Jurassic Park</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Jeff_Goldblum" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Jon Voight</div><div class="actor-meta">Actor · Oscar 1979</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Jon_Voight" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Joanne Woodward</div><div class="actor-meta">Actriz · Oscar 1958</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Joanne_Woodward" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Mary Steenburgen</div><div class="actor-meta">Actriz · Oscar 1981</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Mary_Steenburgen" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Peter Falk</div><div class="actor-meta">Actor · Columbo</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Peter_Falk" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">James Caan</div><div class="actor-meta">Actor · El Padrino</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/James_Caan" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Tony Randall</div><div class="actor-meta">Actor · teatro y TV</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Tony_Randall" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Dylan McDermott</div><div class="actor-meta">Actor · The Practice</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Dylan_McDermott" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Allison Janney</div><div class="actor-meta">Actriz · Oscar 2018</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Allison_Janney" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Jennifer Grey</div><div class="actor-meta">Actriz · Dirty Dancing</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Jennifer_Grey" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Chris Noth</div><div class="actor-meta">Actor · Mr. Big</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Chris_Noth" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Christopher Meloni</div><div class="actor-meta">Actor · Law & Order</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Christopher_Meloni" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Connie Britton</div><div class="actor-meta">Actriz · Nashville</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Connie_Britton" target="_blank">Wikipedia</a></div></div>
+  </div>
+
+  <h3 style="margin-top:1.75rem;">Formados en escuelas del legado Meisner (Esper, Flanigan, etc.)</h3>
+  <div class="actors-grid">
+    <div class="actor-card"><div class="actor-name">James Gandolfini</div><div class="actor-meta">Actor · The Sopranos</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/James_Gandolfini" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Sam Rockwell</div><div class="actor-meta">Actor · Oscar 2018</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Sam_Rockwell" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Naomi Watts</div><div class="actor-meta">Actriz · 2× Oscar nom.</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Naomi_Watts" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Tom Cruise</div><div class="actor-meta">Actor · 3× Oscar nom.</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Tom_Cruise" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Christoph Waltz</div><div class="actor-meta">Actor · 2 Oscar</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Christoph_Waltz" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Chadwick Boseman</div><div class="actor-meta">Actor · Black Panther</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Chadwick_Boseman" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Sebastian Stan</div><div class="actor-meta">Actor · Bucky Barnes</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Sebastian_Stan" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Tatiana Maslany</div><div class="actor-meta">Actriz · Emmy 2016</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Tatiana_Maslany" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Alexandra Daddario</div><div class="actor-meta">Actriz · True Detective</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Alexandra_Daddario" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Karl Urban</div><div class="actor-meta">Actor · The Boys</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Karl_Urban" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Amy Schumer</div><div class="actor-meta">Actriz y comediante</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Amy_Schumer" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Stephen Colbert</div><div class="actor-meta">Actor y conductor</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Stephen_Colbert" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Calista Flockhart</div><div class="actor-meta">Actriz · Ally McBeal</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Calista_Flockhart" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Piper Perabo</div><div class="actor-meta">Actriz · Covert Affairs</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Piper_Perabo" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Nawazuddin Siddiqui</div><div class="actor-meta">Actor · cine indio</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Nawazuddin_Siddiqui" target="_blank">Wikipedia</a></div></div>
+  </div>
+
+  <h3 style="margin-top:1.75rem;">Directores y dramaturgos formados por Meisner</h3>
+  <div class="actors-grid">
+    <div class="actor-card"><div class="actor-name">Sydney Pollack</div><div class="actor-meta">Director · Tootsie</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Sydney_Pollack" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">David Mamet</div><div class="actor-meta">Dramaturgo · Glengarry</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/David_Mamet" target="_blank">Wikipedia</a></div></div>
+    <div class="actor-card"><div class="actor-name">Mark Rydell</div><div class="actor-meta">Director · The Rose</div><div class="actor-links"><a class="actor-link wiki" href="https://en.wikipedia.org/wiki/Mark_Rydell" target="_blank">Wikipedia</a></div></div>
+  </div>
+
+  <div class="alert alert-info" style="margin-top:1.5rem;">
+    <div class="alabel">Nota sobre el legado</div>
+    <p>La influencia de Meisner se extiende también de forma indirecta a través de sus discípulos. William Esper formó a generaciones enteras de actores en su estudio de Nueva York (1965–2019). Maggie Flanigan, Scott Freeman y otros continúan el legado actualmente. Actores como Philip Seymour Hoffman, Sigourney Weaver o Jack Nicholson aparecen en varias listas pero con confirmación menos directa; se omiten aquí por rigor.</p>
+  </div>
+
+  <div class="bnav"><button class="btn" onclick="goTo(8)">← Anterior</button><button class="btn btn-p" onclick="goTo(0)">Volver al principio ↑</button></div>
+</div><!-- /p9 -->
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ═══ GLOBAL FOOTER ═══ -->
+<footer id="gfooter">
+  <span class="gf-author">by <strong>Cristian Candia, Ph.D.</strong> — Guía pedagógica de la Técnica Meisner</span>
+  <div class="gf-actions">
+    <button class="gf-btn" onclick="openVideos()">▶ Videos</button>
+    <button class="gf-btn" onclick="openRefs()">📚 Referencias</button>
+  </div>
+</footer>
+
+<!-- ═══ REFERENCES DRAWER ═══ -->
+<div class="overlay" id="ref-overlay" onclick="closeRefs()"></div>
+<div class="drawer" id="ref-drawer">
+  <div class="drawer-hd"><h3>Referencias y recursos</h3><button class="close-btn" onclick="closeRefs()">✕ Cerrar</button></div>
+  <div style="display:flex;border-bottom:0.5px solid var(--bdr);">
+    <button class="ref-tab active" onclick="switchRef(0)">Libros</button>
+    <button class="ref-tab" onclick="switchRef(1)">Artículos web</button>
+    <button class="ref-tab" onclick="switchRef(2)">Videos</button>
+  </div>
+  <div class="drawer-body" id="rc0">
+    <div class="rg-label">Texto original</div>
+    <div class="ref-item"><div class="ri-title">Sanford Meisner on Acting</div><div class="ri-meta">Sanford Meisner &amp; Dennis Longwell · Vintage Books, 1987</div><div class="ri-desc">El libro central. Transcripciones reales de sus clases. El texto indispensable.</div><a class="ri-link" href="https://www.amazon.com/Sanford-Meisner-Acting-Vintage/dp/0394750594" target="_blank">Ver en Amazon →</a></div>
+    <div class="rg-label">Continuadores directos</div>
+    <div class="ref-item"><div class="ri-title">The Actor's Art and Craft</div><div class="ri-meta">William Esper &amp; Damon DiMarco · Anchor Books, 2008</div><div class="ri-desc">Esper fue el alumno más directo de Meisner. El texto pedagógicamente más preciso del legado.</div><a class="ri-link" href="https://www.amazon.com/Actors-Art-Craft-William-Espers/dp/0385720181" target="_blank">Ver en Amazon →</a></div>
+    <div class="ref-item"><div class="ri-title">The Sanford Meisner Approach (4 vols.)</div><div class="ri-meta">Larry Silverberg · Smith and Kraus, 1994–1999</div><a class="ri-link" href="https://www.amazon.com/Sanford-Meisner-Approach-Workbook-Actors/dp/1880399504" target="_blank">Ver en Amazon →</a></div>
+    <div class="ref-item"><div class="ri-title">Meisner in Practice</div><div class="ri-meta">Aileen Gonsalves · Nick Hern Books, 2015</div><a class="ri-link" href="https://www.nickhernbooks.co.uk/meisner-in-practice" target="_blank">Ver →</a></div>
+    <div class="rg-label">Contexto histórico</div>
+    <div class="ref-item"><div class="ri-title">A Dream of Passion</div><div class="ri-meta">Lee Strasberg · Little, Brown, 1987</div><div class="ri-desc">La perspectiva opuesta. Indispensable para entender el debate Method vs. Meisner.</div></div>
+  </div>
+  <div class="drawer-body" id="rc1" style="display:none">
+    <div class="ref-item"><div class="ri-title">Meisner technique — Wikipedia</div><a class="ri-link" href="https://en.wikipedia.org/wiki/Meisner_technique" target="_blank">Leer →</a></div>
+    <div class="ref-item"><div class="ri-title">Sanford Meisner — Wikipedia</div><a class="ri-link" href="https://en.wikipedia.org/wiki/Sanford_Meisner" target="_blank">Leer →</a></div>
+    <div class="ref-item"><div class="ri-title">Meisner Technique — Britannica</div><a class="ri-link" href="https://www.britannica.com/art/Meisner-technique" target="_blank">Leer →</a></div>
+    <div class="ref-item"><div class="ri-title">The Definitive Guide to the Meisner Technique — Backstage</div><a class="ri-link" href="https://www.backstage.com/magazine/article/the-definitive-guide-to-the-meisner-technique-67712/" target="_blank">Leer →</a></div>
+    <div class="ref-item"><div class="ri-title">Meisner Technique Exercises: Repetition — Backstage</div><a class="ri-link" href="https://www.backstage.com/magazine/article/meisner-technique-exercises-76063/" target="_blank">Leer →</a></div>
+    <div class="ref-item"><div class="ri-title">Meisner Technique — MasterClass</div><a class="ri-link" href="https://www.masterclass.com/articles/meisner-technique" target="_blank">Leer →</a></div>
+    <div class="ref-item"><div class="ri-title">What Does the Meisner Technique Teach? — EMASLA</div><a class="ri-link" href="https://emasla.com/blogs/main/what-does-the-meisner-technique-teach" target="_blank">Leer →</a></div>
+    <div class="ref-item"><div class="ri-title">5 Benefits of the Repetition Exercise — StageMilk</div><a class="ri-link" href="https://www.stagemilk.com/meisner-repetition-exercise/" target="_blank">Leer →</a></div>
+    <div class="ref-item"><div class="ri-title">The Meisner Technique Studio</div><a class="ri-link" href="https://themeisnertechniquestudio.com/meisner-technique/" target="_blank">Visitar →</a></div>
+    <div class="ref-item"><div class="ri-title">Actors Trained in Meisner — IMDB List</div><a class="ri-link" href="https://www.imdb.com/list/ls063986017/" target="_blank">Ver →</a></div>
+  </div>
+  <div class="drawer-body" id="rc2" style="display:none">
+    <div class="ref-item"><div class="ri-title">The Theater's Best Kept Secret (1984)</div><div class="ri-meta">PBS American Masters · Dir. Nick Doob · Prod. Sydney Pollack</div><div class="ri-desc">El único registro audiovisual de Meisner enseñando. Con Robert Duvall, Gregory Peck, David Mamet, Elia Kazan, Peter Falk y Bob Fosse.</div><a class="ri-link" href="https://www.youtube.com/watch?v=cCshbsBgmHk" target="_blank">Ver en YouTube →</a></div>
+    <div class="ref-item"><div class="ri-title">The Sanford Meisner Master Class (1980)</div><div class="ri-meta">Dir. Sydney Pollack · 8 horas · DVD disponible</div><a class="ri-link" href="https://www.sanfordmeisnermasterclass.com/" target="_blank">Información →</a></div>
+    <div class="ref-item"><div class="ri-title">William Esper Studio — Canal YouTube</div><a class="ri-link" href="https://www.youtube.com/@WilliamEsperStudio" target="_blank">Canal →</a></div>
+    <div class="ref-item"><div class="ri-title">Maggie Flanigan Studio — Canal YouTube</div><a class="ri-link" href="https://www.youtube.com/@MaggieFlanigan" target="_blank">Canal →</a></div>
+    <div class="ref-item"><div class="ri-title">Sanford Meisner Center</div><a class="ri-link" href="https://www.themeisnercenter.com/video.html" target="_blank">Videos →</a></div>
+  </div>
+</div>
+
+<!-- ═══ VIDEOS DRAWER ═══ -->
+<div class="overlay" id="vid-overlay" onclick="closeVideos()"></div>
+<div class="drawer" id="vid-drawer">
+  <div class="drawer-hd"><h3>Videos por componente</h3><button class="close-btn" onclick="closeVideos()">✕ Cerrar</button></div>
+  <div class="drawer-body">
+    <div class="alert-info alert" style="margin-bottom:1rem;"><div class="alabel">Cómo funcionan los videos</div><p>Todos los thumbnails abren YouTube en una nueva pestaña. Error 153 significa que el propietario desactivó el embebido — el video sigue siendo público en YouTube. Este sistema funciona igual en cualquier dominio propio.</p></div>
+    <div class="vd-item">
+      <div class="vd-hd"><strong>Documental original — "The Theater's Best Kept Secret"</strong><span>PBS 1984 · Con Robert Duvall, Gregory Peck, David Mamet</span></div>
+      <a href="https://www.youtube.com/watch?v=cCshbsBgmHk" target="_blank" rel="noopener" style="display:block;"><div class="vd-thumb"><img src="https://img.youtube.com/vi/cCshbsBgmHk/hqdefault.jpg" alt="Theater's Best Kept Secret" loading="lazy"><div class="vd-play"><div class="vd-play-c"><div class="vd-play-t"></div></div></div></div></a>
+      <div class="vd-desc">El único registro audiovisual de Meisner enseñando en vivo. 1 hora aprox.</div>
+    </div>
+    <div class="vd-item">
+      <div class="vd-hd"><strong>Ejercicio de repetición — demostración</strong><span>Componente 01</span></div>
+      <a href="https://www.youtube.com/watch?v=QFnLM4VNfPg" target="_blank" rel="noopener" style="display:block;"><div class="vd-thumb"><img src="https://img.youtube.com/vi/QFnLM4VNfPg/hqdefault.jpg" alt="Repetition Exercise" loading="lazy"><div class="vd-play"><div class="vd-play-c"><div class="vd-play-t"></div></div></div></div></a>
+      <div class="vd-desc">Evolución desde frase simple hasta contacto real entre actores.</div>
+    </div>
+    <div class="vd-item">
+      <div class="vd-hd"><strong>Actividad independiente con repetición</strong><span>Componente 02</span></div>
+      <a href="https://www.youtube.com/watch?v=M_oE5pEjPco" target="_blank" rel="noopener" style="display:block;"><div class="vd-thumb"><img src="https://img.youtube.com/vi/M_oE5pEjPco/hqdefault.jpg" alt="Independent Activity" loading="lazy"><div class="vd-play"><div class="vd-play-c"><div class="vd-play-t"></div></div></div></div></a>
+      <div class="vd-desc">Cómo la concentración en una tarea física libera al actor de la autogestión consciente.</div>
+    </div>
+    <div class="vd-item">
+      <div class="vd-hd"><strong>Preparación emocional con imaginación</strong><span>Componente 03</span></div>
+      <a href="https://www.youtube.com/watch?v=Yl0VRafF0pA" target="_blank" rel="noopener" style="display:block;"><div class="vd-thumb"><img src="https://img.youtube.com/vi/Yl0VRafF0pA/hqdefault.jpg" alt="Emotional Preparation" loading="lazy"><div class="vd-play"><div class="vd-play-c"><div class="vd-play-t"></div></div></div></div></a>
+      <div class="vd-desc">Demostración de la diferencia entre imaginación y memoria afectiva.</div>
+    </div>
+    <div class="vd-item">
+      <div class="vd-hd"><strong>Meisner sobre escuchar y presencia</strong><span>Componente 04</span></div>
+      <a href="https://www.youtube.com/watch?v=e6OsGPQAlMQ" target="_blank" rel="noopener" style="display:block;"><div class="vd-thumb"><img src="https://img.youtube.com/vi/e6OsGPQAlMQ/hqdefault.jpg" alt="Listening Meisner" loading="lazy"><div class="vd-play"><div class="vd-play-c"><div class="vd-play-t"></div></div></div></div></a>
+      <div class="vd-desc">El principio de escucha activa como base de toda reacción orgánica en escena.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+var cur=0;
+var total=10;
+var labels=['El principio central','Ejercicio de repetición','Actividad independiente','Preparación emocional','Escucha activa','Trabajo de escena','Meisner vs. el Método','Errores frecuentes','Material descargable','Actores formados'];
+function goTo(n){
+  document.getElementById('p'+cur).classList.remove('active');
+  document.getElementById('nav'+cur) && document.getElementById('nav'+cur).classList.remove('active');
+  cur=n;
+  document.getElementById('p'+cur).classList.add('active');
+  document.getElementById('nav'+cur) && document.getElementById('nav'+cur).classList.add('active');
+  document.getElementById('bc-label').textContent=labels[cur];
+  document.getElementById('topbar-title').textContent=labels[cur];
+  document.getElementById('main').scrollTop=0;
+  document.getElementById('progress-bar').style.width=Math.round(cur/9*100)+'%';
+  closeSidebar();
+}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');}
+
+// ref drawer
+var rcs=[document.getElementById('rc0'),document.getElementById('rc1'),document.getElementById('rc2')];
+var rtabs=document.querySelectorAll('.ref-tab');
+function openRefs(){document.getElementById('ref-overlay').classList.add('open');document.getElementById('ref-drawer').classList.add('open');}
+function closeRefs(){document.getElementById('ref-overlay').classList.remove('open');document.getElementById('ref-drawer').classList.remove('open');}
+function switchRef(i){rcs.forEach(function(r,j){r.style.display=j===i?'block':'none';});rtabs.forEach(function(t,j){t.classList.toggle('active',j===i);});}
+
+// vid drawer
+function openVideos(){document.getElementById('vid-overlay').classList.add('open');document.getElementById('vid-drawer').classList.add('open');}
+function closeVideos(){document.getElementById('vid-overlay').classList.remove('open');document.getElementById('vid-drawer').classList.remove('open');}
+
+// emotions
+function selectEmo(el,name,desc){
+  document.querySelectorAll('.emo-chip').forEach(function(c){c.classList.remove('selected');});
+  el.classList.add('selected');
+  var r=document.getElementById('emo-result');
+  r.innerHTML='<strong>Semilla: '+name+'</strong><br>'+desc+'<br><span style="font-size:12px;color:var(--txt3);margin-top:6px;display:block;">Habita este estado durante 2 minutos antes de sentarte con tu compañero. Luego suéltalo.</span>';
+  r.classList.add('show');
+}
+
+// print sheet
+function printSheet(id){
+  var c=document.getElementById(id).innerHTML;
+  var w=window.open('','_blank');
+  w.document.write('<html><head><title>Ficha Meisner — Cristian Candia Ph.D.</title><style>body{font-family:Georgia,serif;max-width:700px;margin:2rem auto;color:#111;font-size:11pt;}h4{font-size:13pt;margin-bottom:0.5rem;}label{font-size:9pt;font-weight:bold;text-transform:uppercase;letter-spacing:0.08em;display:block;margin:0.85rem 0 0.25rem;color:#555;}.ws-line{border-bottom:1px solid #bbb;height:26px;margin-bottom:3px;}.ws-section-title{font-size:9pt;font-weight:bold;text-transform:uppercase;letter-spacing:0.1em;color:#BA7517;border-bottom:1.5px solid #EF9F27;padding-bottom:3px;margin:1rem 0 0.5rem;}.ws-two{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}footer{margin-top:2rem;font-size:8pt;color:#aaa;border-top:1px solid #eee;padding-top:0.5rem;}@media print{body{margin:1cm;}}</style></head><body>');
+  w.document.write(c);
+  w.document.write('<footer>Guía de la Técnica Meisner — by Cristian Candia, Ph.D. — Impreso el '+new Date().toLocaleDateString('es-CL')+'</footer>');
+  w.document.write('</body></html>');
+  w.document.close();
+  w.focus();
+  setTimeout(function(){w.print();},500);
+}
+
+// keyboard nav
+document.addEventListener('keydown',function(e){
+  if(e.key==='ArrowRight'&&cur<9)goTo(cur+1);
+  if(e.key==='ArrowLeft'&&cur>0)goTo(cur-1);
+  if(e.key==='Escape'){closeRefs();closeVideos();closeSidebar();}
+});
+document.getElementById('main').addEventListener('click',closeSidebar);
+</script>
+</body>
+</html>
