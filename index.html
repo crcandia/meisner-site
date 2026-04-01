@@ -320,13 +320,69 @@ hr.div{border:none;border-top:0.5px solid var(--bdr);margin:1.75rem 0;}
 .vd-play-t{width:0;height:0;border-top:9px solid transparent;border-bottom:9px solid transparent;border-left:16px solid rgba(255,255,255,0.9);margin-left:3px;}
 .vd-desc{padding:0.65rem 0.9rem;font-size:12px;color:var(--txt2);line-height:1.5;}
 
+
 /* ── GLOBAL FOOTER ── */
-#gfooter{border-top:0.5px solid var(--bdr2);background:var(--bg2);padding:0.65rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;min-height:48px;}
-.gf-author{font-size:12px;color:var(--txt3);}
-.gf-author strong{font-weight:500;color:var(--txt2);}
-.gf-actions{display:flex;gap:7px;}
-.gf-btn{font-size:11.5px;padding:4px 12px;border:0.5px solid var(--bdr2);border-radius:var(--r);background:transparent;color:var(--txt2);cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:5px;}
-.gf-btn:hover{background:var(--bg3);}
+#gfooter{
+  border-top:0.5px solid var(--bdr2);
+  background:var(--bg2);
+  padding:0.65rem 1.5rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-shrink:0;
+  min-height:48px;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.gf-author{
+  font-size:12px;
+  color:var(--txt3);
+  flex:1 1 auto;
+  min-width:260px;
+}
+
+.gf-author strong{
+  font-weight:500;
+  color:var(--txt2);
+}
+
+.gf-lab-link{
+  margin-left:auto;
+  font-size:11.5px;
+  color:var(--txt3);
+  text-decoration:none;
+  white-space:nowrap;
+  opacity:0.95;
+}
+
+.gf-lab-link:hover{
+  color:var(--txt2);
+  text-decoration:underline;
+}
+
+.gf-actions{
+  display:flex;
+  gap:7px;
+}
+
+.gf-btn{
+  font-size:11.5px;
+  padding:4px 12px;
+  border:0.5px solid var(--bdr2);
+  border-radius:var(--r);
+  background:transparent;
+  color:var(--txt2);
+  cursor:pointer;
+  font-family:var(--sans);
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+
+.gf-btn:hover{
+  background:var(--bg3);
+}
 
 @media print{
   #sidebar,#topbar,#breadcrumb,#gfooter,.bnav,#progress-bar{display:none!important;}
@@ -387,9 +443,9 @@ hr.div{border:none;border-top:0.5px solid var(--bdr);margin:1.75rem 0;}
 <!-- ═══ PAGE 0: PRINCIPIO ═══ -->
 <div class="page active" id="p0">
   <div class="hero">
-    <div class="kicker">Guía completa para actores naturales</div>
+    <div class="kicker">Guía (probablemente incompleta) para actores naturales</div>
     <h1>La técnica Meisner</h1>
-    <p class="hero-desc">El método más influyente del teatro norteamericano del siglo XX, desarrollado por Sanford Meisner a lo largo de más de 65 años en el Neighborhood Playhouse de Nueva York.</p>
+    <p class="hero-desc">El método más influyente del teatro norteamericano del siglo XX, desarrollado por Sanford Meisner a lo largo de más de 65 años en el <a href="https://www.neighborhoodplayhouse.org/.">Neighborhood Playhouse</a> de Nueva York.</p>
     <div class="pills">
       <span class="pill">9 secciones</span><span class="pill">Teoría + ejercicios</span>
       <span class="pill">Ejemplos reales</span><span class="pill">Material descargable</span>
@@ -824,7 +880,17 @@ hr.div{border:none;border-top:0.5px solid var(--bdr);margin:1.75rem 0;}
 
 <!-- ═══ GLOBAL FOOTER ═══ -->
 <footer id="gfooter">
-  <span class="gf-author">by <strong>Cristian Candia, Ph.D.</strong> — Guía pedagógica de la Técnica Meisner</span>
+  <span class="gf-author">by <strong>Cristian Candia, Ph.D.</strong> — Guía de la Técnica Meisner para principiantes</span>
+
+  <a
+    class="gf-lab-link"
+    href="https://criss-lab.com/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Para proyectos de investigación científica → CRiSS Lab
+  </a>
+
   <div class="gf-actions">
     <button class="gf-btn" onclick="openVideos()">▶ Videos</button>
     <button class="gf-btn" onclick="openRefs()">📚 Referencias</button>
